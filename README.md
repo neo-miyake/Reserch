@@ -6,4 +6,6 @@
 
 ## 学習データ(Blender)
 画像生成ネットワークの教師データは、3DモデリングソフトBlenderを用いて作成。Blenderは完全無料で誰でも利用することが出来る。  
+![clementine_thumb](https://user-images.githubusercontent.com/95911997/207207541-3fbdee20-532a-41f5-938c-44e4a1ca878b.png)
+  
 あのNASAも積極的に利用しており、人工衛星やロケット月面モジュールなどの3Dモデルが[NASA 3D Resources](https://nasa3d.arc.nasa.gov/models "nasa3d")で公開されている(一部は外部ユーザーの投稿によるモデルもあるので注意)。
