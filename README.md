@@ -9,4 +9,4 @@
     
 ![](https://user-images.githubusercontent.com/95911997/207211726-6e726cb0-5e3e-40a8-9584-72b89d3c07b6.jpg)
     
-あのNASAも積極的に利用しており、人工衛星やロケット、月面モジュール、天体の表面テクスチャなどの3Dモデルが[NASA 3D Resources](https://nasa3d.arc.nasa.gov/models "nasa3d")で公開されている(一部は外部ユーザーの投稿によるモデルもあるので注意)。
+あのNASAも積極的に利用しており、人工衛星やロケット、月面モジュールなどの3Dモデルが[NASA 3D Resources](https://nasa3d.arc.nasa.gov/models "nasa3d")で公開されている(一部は外部ユーザーの投稿によるモデルもあるので注意)。
