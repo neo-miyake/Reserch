@@ -28,8 +28,7 @@ def maketraindata(files,save_files):
         
         theta = float(os.path.splitext(os.path.basename(file))[0].split(',')[1])/math.pi
         phi   = float(os.path.splitext(os.path.basename(file))[0].split(',')[2])/(2*math.pi)
-        # r     = float(os.path.splitext(os.path.basename(file))[0].split(',')[3])
-        # z = float(os.path.splitext(os.path.basename(file))[0].split(',')[4])
+        
         q = np.asarray([theta,phi],np.float32)
         outputs[i] = q
 
@@ -80,18 +79,18 @@ def plot_graph(loss_list,val_loss_list):
     plt.show()
 
 ver = "ver1"
-MODEL_PATH = f"model_AutoEncoder/{ver}/"
+MODEL_PATH = f"Image_Generate/{ver}/"
 os.makedirs(MODEL_PATH,exist_ok=True)
 
 image_size = 256
 dim=16
 
-files = natsorted(glob.glob("learning_picture_ver2/cle_ver3_train_1/*.jpg"))
-save_files = MODEL_PATH+"/learning_data/train_1212.h5"
-maketraindata(files,save_files)
-files = natsorted(glob.glob("learning_picture_ver2/cle_ver3_val_1/*.jpg"))
-save_files = MODEL_PATH+"/learning_data/val_1212.h5"
-maketraindata(files,save_files)
+# files = natsorted(glob.glob("learning_picture/cle_train_1/*.jpg"))
+# save_files = MODEL_PATH+"/learning_data/train_1212.h5"
+# maketraindata(files,save_files)
+# files = natsorted(glob.glob("learning_picture/cle_val_1/*.jpg"))
+# save_files = MODEL_PATH+"/learning_data/val_1212.h5"
+# maketraindata(files,save_files)
 
 # input quaternion
 input_ = layers.Input(shape=(2,))
@@ -224,14 +223,10 @@ loss     = history.history['loss']
 val_loss = history.history['val_loss']
 plot_graph(loss, val_loss)
 
-# model = keras.models.load_model(MODEL_PATH+"/AutoEncoder/Image_Generate_ver1_7.h5")
-# model.summary()
-
-
 path, dirs, files = next(os.walk(MODEL_PATH+"result/"))
 dir_num = len(dirs)+1
 os.makedirs(MODEL_PATH+"result/"+str(dir_num), exist_ok=True)
-files = natsorted(glob.glob("learning_picture_ver2/cle_ver3_val_1/*.jpg"))
+files = natsorted(glob.glob("learning_picture/cle_val_1/*.jpg"))
 
 
 pre = model.predict(test[1])
@@ -254,4 +249,4 @@ for i, file in tqdm(enumerate(files)):
     plt.close()
     
 num = len(glob.glob(MODEL_PATH+"/AutoEncoder/Image_Generate_ver1_"+"*"+".h5"))
-model.save(MODEL_PATH+"/AutoEncoder/Image_Generate_ver1_"+str(num+1)+".h5")
+model.save(MODEL_PATH+"/model/Image_Generate_ver1_"+str(num+1)+".h5")
