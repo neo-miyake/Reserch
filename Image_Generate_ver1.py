@@ -67,6 +67,7 @@ def plot_graph(loss_list,val_loss_list):
     fig.set_figwidth(8)
     plt.show()
 
+
 ver = "ver1"
 MODEL_PATH = f"Image_Generate/{ver}/"
 os.makedirs(MODEL_PATH,exist_ok=True)
@@ -92,7 +93,7 @@ x = layers.Dense(512, activation = 'tanh')(x)
 x = layers.Dense(2048,activation = 'tanh')(x)
 x_1 = layers.Reshape((16,16,8))(x)
 
-# 16,16,dim*16
+"================================================================="
 x = layers.Conv2D(dim*16,kernel_size=(3, 3), padding='same')(x_1)
 x = layers.BatchNormalization()(x)
 x = layers.Activation('relu')(x)
@@ -105,15 +106,14 @@ x = layers.Activation('relu')(x)
 x = layers.Conv2D(dim*16,kernel_size=(3, 3), padding='same')(x)
 x = layers.BatchNormalization()(x)
 x = layers.Activation('relu')(x)
-#16,16
 
-# 32,32,dim*16
 x = layers.UpSampling2D(size=(2,2))(x)
 x_2 = layers.UpSampling2D(size=(2,2))(x_1)
 x = layers.Concatenate(axis=3)([x, x_2])
+"================================================================="
 
 
-#
+"================================================================="
 x = layers.Conv2D(dim*8,kernel_size=(3, 3), padding='same')(x)
 x = layers.BatchNormalization()(x)
 x = layers.Activation('relu')(x)
@@ -126,13 +126,14 @@ x = layers.Activation('relu')(x)
 x = layers.Conv2D(dim*8,kernel_size=(3, 3), padding='same')(x)
 x = layers.BatchNormalization()(x)
 x = layers.Activation('relu')(x)
-#32,32
 
 x = layers.UpSampling2D(size=(2,2))(x)
 x_3 = layers.UpSampling2D(size=(4,4))(x_1)
 x = layers.Concatenate(axis=3)([x, x_3])
+"================================================================="
 
 
+"================================================================="
 x = layers.Conv2D(dim*4,kernel_size=(3, 3), padding='same')(x)
 x = layers.BatchNormalization()(x)
 x = layers.Activation('relu')(x)
@@ -145,13 +146,14 @@ x = layers.Activation('relu')(x)
 x = layers.Conv2D(dim*4,kernel_size=(3, 3), padding='same')(x)
 x = layers.BatchNormalization()(x)
 x = layers.Activation('relu')(x)
-#64,64
 
 x = layers.UpSampling2D(size=(2,2))(x)
 x_4 = layers.UpSampling2D(size=(8,8))(x_1)
 x = layers.Concatenate(axis=3)([x, x_4])
+"================================================================="
 
 
+"================================================================="
 x = layers.Conv2D(dim*2,kernel_size=(3, 3), padding='same')(x)
 x = layers.BatchNormalization()(x)
 x = layers.Activation('relu')(x)
@@ -164,13 +166,14 @@ x = layers.Activation('relu')(x)
 x = layers.Conv2D(dim*2,kernel_size=(3, 3), padding='same')(x)
 x = layers.BatchNormalization()(x)
 x = layers.Activation('relu')(x)
-#128,128
 
 x = layers.UpSampling2D(size=(2,2))(x)
 x_5 = layers.UpSampling2D(size=(16,16))(x_1)
 x = layers.Concatenate(axis=3)([x, x_5])
+"================================================================="
 
 
+"================================================================="
 x = layers.Conv2D(dim*1,kernel_size=(3, 3), padding='same')(x)
 x = layers.BatchNormalization()(x)
 x = layers.Activation('relu')(x)
@@ -187,6 +190,7 @@ x = layers.Activation('relu')(x)
 x = layers.Conv2D(3,kernel_size=(3, 3), padding='same')(x)
 x = layers.BatchNormalization()(x)
 output_ = layers.Activation('sigmoid')(x)
+"================================================================="
 
 model = Model(input_,output_)
 model.compile(optimizer='adam',loss='mean_squared_error')

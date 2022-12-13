@@ -10,16 +10,6 @@ import keras.backend as K
 import time
 from tqdm import tqdm
 
-def maketraindata(save_files):
-    outputs = np.zeros((1,1,2),np.float32)
-
-    # for i, file in tqdm(enumerate(files)):
-
-    q = np.asarray([0,0],np.float32)
-    outputs[0] = q
-
-    with h5py.File(save_files,"a") as h5:
-        h5.create_dataset('outputs',data = outputs)
 
 def read_dataset(h5_path):
     data = []
@@ -48,13 +38,7 @@ def read_dataset2(h5_path):
 
     return data
 
-# def quatmul(q1,q2):
-#     q_rel = np.array([q1[0][0]*q2[0][0]-q1[0][1]*q2[0][1]-q1[0][2]*q2[0][2]-q1[0][3]*q2[0][3],
-#                       q1[0][2]*q2[0][3]-q1[0][3]*q2[0][2]+q1[0][0]*q2[0][1]+q1[0][1]*q2[0][0],
-#                       q1[0][3]*q2[0][1]-q1[0][1]*q2[0][3]+q1[0][0]*q2[0][2]+q1[0][2]*q2[0][0],
-#                       q1[0][1]*q2[0][2]-q1[0][2]*q2[0][1]+q1[0][0]*q2[0][3]+q1[0][3]*q2[0][0]])
-    
-#     return q_rel
+
 
 class Adam:
 
@@ -114,31 +98,14 @@ print("pre\n",default,"\ntrue\n",x_true)
 opt =keras.optimizers.Adam(lr=0.5, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
 # optimizer = Adam(lr=0.5, beta1=0.9, beta2=0.99)
 
-grad = [[100,0]]
-ite = 0
-lr = 0.001
-# while abs(grad[0][0]*lr)>=0.0872665 or abs(grad[0][1]*lr)>=0.0872665:
+    
 for i in range(10):
     with tf.GradientTape() as tape:
         tape.watch(default)
         y_pred = model(default)
         loss = tf.keras.losses.mean_squared_error(y_true,y_pred)
         grad = tape.gradient(loss,default)
-        print(grad)
-        # a = [1,-1]
-        # grad=grad*a
-        # optimizer.update(grad, grad)
-        
-        
-        # default = grad.numpy()[0]*lr*default.numpy()[0]
         opt.apply_gradients([(grad,default)])
-        # 
-        # default = tf.multiply(default.reshape(1,4),1)
-        # default = default - tf.multiply(grad,1)
         print("grad\n",grad,"\npre\n",default)
-        ite += 1
      
-        
-# print("grad\n",grad,"\npre\n",default)
 print("\ntrue\n",x_true,"\npre\n",default)
-print(ite)
