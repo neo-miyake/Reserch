@@ -16,7 +16,7 @@ from keras.models import Model
 from PIL import Image
 
 
-def maketraindata(files,save_files):
+def make_traindata(files,save_files):
     inputs  = np.zeros((len(files), image_size, image_size,3), np.uint8)
     outputs = np.zeros((len(files),1,2),np.float32)
 
@@ -52,17 +52,6 @@ def read_dataset(h5_path):
 
     return data
 
-def read_dataset2(h5_path):
-    data = []
-      
-    with h5py.File(h5_path, "r") as f:
-        outputs = f['outputs'][()]
-
-    outputs = outputs.reshape(-1,1,4)
-    data.append(tf.multiply(outputs, 1))
-
-    return data
-
 def plot_graph(loss_list,val_loss_list):
     loss     = loss_list
     val_loss = val_loss_list
@@ -87,10 +76,10 @@ dim=16
 
 # files = natsorted(glob.glob("learning_picture/cle_train_1/*.jpg"))
 # save_files = MODEL_PATH+"/learning_data/train_1212.h5"
-# maketraindata(files,save_files)
+# make_traindata(files,save_files)
 # files = natsorted(glob.glob("learning_picture/cle_val_1/*.jpg"))
 # save_files = MODEL_PATH+"/learning_data/val_1212.h5"
-# maketraindata(files,save_files)
+# make_traindata(files,save_files)
 
 # input quaternion
 input_ = layers.Input(shape=(2,))
