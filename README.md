@@ -5,7 +5,8 @@
 ![ネットワーク構成](https://user-images.githubusercontent.com/95911997/207896097-ec2790ea-a2c2-4175-b670-c61653525056.jpg)  
 
 このネットワークを用いて生成された偽物のデブリ画像がカメラで撮影された本物のデブリ画像と一致するように入力座標を最適化することで相対姿勢を求める。
-入力座標最適化のための修正量は、TensorFlowの***GradientTape***(勾配テープ)と誤差逆伝播によって算出した勾配をAdamで最適化したものを用いる。
+入力座標最適化のための修正量は、TensorFlowの***GradientTape***(勾配テープ)と誤差逆伝播によって算出した勾配をAdamで最適化したものを用いる。  
+![推定方法](https://user-images.githubusercontent.com/95911997/207898346-fcefde41-74a4-45af-8eda-a3bf28e79751.jpg)  
 
 ## 学習データ(Blender)
 画像生成ネットワークの教師データは、3DモデリングソフトBlenderを用いて作成。Blenderは完全無料で誰でも利用することが出来る。
