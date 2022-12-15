@@ -86,8 +86,6 @@ dim=16
 input_ = layers.Input(shape=(2,))
 
 # 低解像度の画像を生成
-# x = layers.Dense(4, activation = 'tanh')(input_)
-# x = layers.Dense(32, activation = 'tanh')(input_)
 x = layers.Dense(128, activation = 'tanh')(input_)
 x = layers.Dense(512, activation = 'tanh')(x)
 x = layers.Dense(2048,activation = 'tanh')(x)
