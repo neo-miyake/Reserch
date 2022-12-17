@@ -72,25 +72,25 @@ class Adam:
 
 
 ver = "ver1"
-MODEL_PATH = f"model_AutoEncoder/{ver}/"
+MODEL_PATH = f"Image_Generate/{ver}/"
 os.makedirs(MODEL_PATH,exist_ok=True)
 image_size = 256
 
 # save_files = MODEL_PATH+"/learning_data/1210_test.h5"
 # maketraindata(save_files)
 
-model = keras.models.load_model(MODEL_PATH+"/AutoEncoder/Image_Generate_ver1_17.h5")
+model = keras.models.load_model(MODEL_PATH+"model/Image_Generate_ver1_17.h5")
 model.summary()
 
 train = read_dataset(MODEL_PATH+"learning_data/train_1212.h5")
 test  = read_dataset(MODEL_PATH+"learning_data/val_1212.h5")
-test1121=read_dataset2(MODEL_PATH+"learning_data/1210_test.h5")
+# test1121=read_dataset2(MODEL_PATH+"learning_data/1210_test.h5")
 np.set_printoptions(threshold=np.inf)
 
 
 
-default = tf.Variable(test1121[0][0])
-# default = tf.Variable(test[1][7])
+# default = tf.Variable(test1121[0][0])
+default = tf.Variable(test[1][5])
 y_true = test[0][750]/255
 x_true = test[1][750]
 print("pre\n",default,"\ntrue\n",x_true)
