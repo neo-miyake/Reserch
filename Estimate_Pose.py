@@ -89,8 +89,9 @@ np.set_printoptions(threshold=np.inf)
 
 
 
-# default = tf.Variable(test1121[0][0])
-default = tf.Variable(test[1][5])
+# default = tf.Variable([[0,0]])
+default = tf.Variable(test[1][700])
+print(default)
 y_true = test[0][750]/255
 x_true = test[1][750]
 print("pre\n",default,"\ntrue\n",x_true)
@@ -99,13 +100,29 @@ opt =keras.optimizers.Adam(lr=0.5, beta_1=0.9, beta_2=0.999, epsilon=None, decay
 # optimizer = Adam(lr=0.5, beta1=0.9, beta2=0.99)
 
     
-for i in range(10):
+# for i in range(7):
+i=0
+grad=tf.Variable([[1000,1000]])
+while abs(grad[0][1])>25:
     with tf.GradientTape() as tape:
         tape.watch(default)
         y_pred = model(default)
         loss = tf.keras.losses.mean_squared_error(y_true,y_pred)
         grad = tape.gradient(loss,default)
+        print("grad\n",grad)
         opt.apply_gradients([(grad,default)])
         print("grad\n",grad,"\npre\n",default)
+        if default[0][1]<0:
+            # default[0][1].assign(tf.add(default[0][1],tf.constant(1.0)))
+            default.assign([[default[0][0], tf.add(default[0][1],tf.constant(1.0))]])
+            print("-")
+            print("0grad\n",grad,"\npre\n",default[0][1])
+        if default[0][1]>1:
+            default.assign([[default[0][0], tf.subtract(default[0][1],tf.constant(0.5))]])
+            print("1grad\n",grad,"\npre\n",default[0][1])
+    i+=1
+print(i)
+                
+            
      
 print("\ntrue\n",x_true,"\npre\n",default)
