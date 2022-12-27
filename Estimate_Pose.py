@@ -59,40 +59,37 @@ np.set_printoptions(threshold=np.inf)
 
 
 
-opt = keras.optimizers.Adam(lr=0.8, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
-pi_2 = tf.constant(1)
-pi_1 = tf.constant(1)
+opt = keras.optimizers.Adam(lr=0.1, beta_1=0.9, beta_2=0.99, epsilon=None, decay=0.0, amsgrad=False)
+# pi_2 = tf.constant(1)
+# pi_1 = tf.constant(1)
 
-for j in range(100):
-    default = tf.Variable([[0.0,0.0]])
-    y_true = test[0][j]/255
-    x_true = test[1][j]
-    # print("pre\n",default,"\ntrue\n",x_true)
-    
-    # ite=0
-    for i in range(2):
-        with tf.GradientTape() as tape:
-            tape.watch(default)
-            y_pred = model(default)
-            loss = tf.keras.losses.mean_squared_error(y_true,y_pred)
-            # LOSS = np.sum(loss.numpy())/65025
-            # print("LOSS",LOSS)
-            grad = tape.gradient(loss,default)
-            # print("grad: ",grad)
-            opt.apply_gradients([(grad,default)])
-            
-            # if default[0][0]<0:
-            #     default.assign([[tf.add(default[0][0]%tf.constant(1.0),tf.constant(1.0)),
-            #                      default[0][1]]])
-            # if default[0][1]<0:
-            #     default.assign([[default[0][0], tf.add(tf.mod(default[0][1],tf.constant(1.0)),tf.constant(1.0))]])
-                
-            # if default[0][0]>1:
-            #     default.assign([[tf.subtract(default[0][0],tf.constant(1.0)),default[0][1]]])
-            # if default[0][1]>1:
-            #     default.assign([[default[0][0], tf.subtract(default[0][1],tf.constant(1.0))]])
-           
-            # print(ite,"\ntrue\n",x_true,"\npre\n",default,"\ngrad\n",grad)
-            # ite+=1
-    
-    print("\ntrue\n",x_true,"\npre\n",default)
+# for j in range(1):
+default = tf.Variable([[0.5,0.5]])
+y_true = test[0][125]/255
+x_true = test[1][125]
+# print("pre\n",default,"\ntrue\n",x_true)
+
+for i in range(10):
+    with tf.GradientTape() as tape:
+        tape.watch(default)
+        y_pred = model(default)
+        loss = tf.keras.losses.mean_squared_error(y_true,y_pred)
+        grad = tape.gradient(loss,default)
+        opt.apply_gradients([[grad,default]])
+
+        
+        # if default[0][0]<0:
+        #     default.assign([[tf.add(default[0][0],tf.constant(1.0)),default[0][1]]])
+        # if default[0][1]<0:
+        #     default.assign([[default[0][0], tf.add(default[0][1],tf.constant(1.0))]])
+        
+        # if default[0][0]>1:
+        #     default.assign([[tf.math.mod(default[0][0],tf.constant(1.0)),default[0][1]]])
+
+        # if default[0][1]>1:
+        #     default.assign([[default[0][0], tf.math.mod(default[0][1],tf.constant(1.0))]])
+       
+        # print(j,"\ntrue\n",x_true,"\npre\n",default,"\ngrad\n",grad)
+
+
+print("true\n",x_true,"\npre\n",default,"\n")
