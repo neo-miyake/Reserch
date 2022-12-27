@@ -20,6 +20,6 @@
     
 NASAも積極的に利用しており、人工衛星やロケット、月面モジュールなどの3Dモデルが[NASA 3D Resources](https://nasa3d.arc.nasa.gov/models "nasa3d")で公開されている(一部は外部ユーザーの投稿によるモデル)。
 
-##推定時の様子##  
+## 推定時の様子  
 ネットワークが推定を行う過程をgifにしてみた。出力崩れがないのを見ると生成ネットワークの精度は十分高いと言える。  
 ![out](https://user-images.githubusercontent.com/95911997/209664779-e978c3e4-f1cc-45a9-ac99-5af6d6439a2a.gif)
