@@ -10,7 +10,7 @@ import keras.backend as K
 import time
 from tqdm import tqdm
 import random
-
+from PIL import Image
 
 
 def read_dataset(h5_path):
@@ -49,7 +49,7 @@ image_size = 256
 # save_files = MODEL_PATH+"/learning_data/1210_test.h5"
 # maketraindata(save_files)
 
-model = keras.models.load_model(MODEL_PATH+"model/Image_Generate_ver1_17.h5")
+model = keras.models.load_model(MODEL_PATH+"model/Image_Generate_ver1_1.h5")
 model.summary()
 
 train = read_dataset(MODEL_PATH+"learning_data/train_1212.h5")
@@ -59,37 +59,42 @@ np.set_printoptions(threshold=np.inf)
 
 
 
-opt = keras.optimizers.Adam(lr=0.1, beta_1=0.9, beta_2=0.99, epsilon=None, decay=0.0, amsgrad=False)
+opt = keras.optimizers.Adam(lr=0.2, beta_1=0.9, beta_2=0.99, epsilon=None, decay=0.0, amsgrad=False)
 # pi_2 = tf.constant(1)
 # pi_1 = tf.constant(1)
 
 # for j in range(1):
-default = tf.Variable([[0.5,0.5]])
-y_true = test[0][125]/255
-x_true = test[1][125]
+default = tf.Variable([[0.0,0.0]])
+y_true = test[0][19]/255
+x_true = test[1][19]
 # print("pre\n",default,"\ntrue\n",x_true)
-
-for i in range(10):
+images = []
+for i in range(100):
     with tf.GradientTape() as tape:
         tape.watch(default)
         y_pred = model(default)
         loss = tf.keras.losses.mean_squared_error(y_true,y_pred)
         grad = tape.gradient(loss,default)
         opt.apply_gradients([[grad,default]])
+        
+        im = Image.fromarray((y_pred.numpy()*255).reshape(image_size,image_size,3).astype(np.uint8)).convert('RGB')
+        images.append(im)
+           
+
 
         
-        # if default[0][0]<0:
-        #     default.assign([[tf.add(default[0][0],tf.constant(1.0)),default[0][1]]])
-        # if default[0][1]<0:
-        #     default.assign([[default[0][0], tf.add(default[0][1],tf.constant(1.0))]])
+        if default[0][0]<0:
+            default.assign([[tf.add(default[0][0],tf.constant(1.0)),default[0][1]]])
+        if default[0][1]<0:
+            default.assign([[default[0][0], tf.add(default[0][1],tf.constant(1.0))]])
         
-        # if default[0][0]>1:
-        #     default.assign([[tf.math.mod(default[0][0],tf.constant(1.0)),default[0][1]]])
+        if default[0][0]>1:
+            default.assign([[tf.math.mod(default[0][0],tf.constant(1.0)),default[0][1]]])
 
-        # if default[0][1]>1:
-        #     default.assign([[default[0][0], tf.math.mod(default[0][1],tf.constant(1.0))]])
+        if default[0][1]>1:
+            default.assign([[default[0][0], tf.math.mod(default[0][1],tf.constant(1.0))]])
        
-        # print(j,"\ntrue\n",x_true,"\npre\n",default,"\ngrad\n",grad)
+        print(i,"\ntrue\n",x_true,"\npre\n",default,"\ngrad\n",grad)
 
-
+im.save('out.gif', save_all=True, append_images=images)
 print("true\n",x_true,"\npre\n",default,"\n")
