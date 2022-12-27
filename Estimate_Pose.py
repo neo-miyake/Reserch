@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 import keras.backend as K
 import time
 from tqdm import tqdm
+import random
+
 
 
 def read_dataset(h5_path):
@@ -39,38 +41,6 @@ def read_dataset2(h5_path):
     return data
 
 
-
-class Adam:
-
-    def __init__(self, lr=0.001, beta1=0.9, beta2=0.999):
-        self.lr = lr
-        self.beta1 = beta1
-        self.beta2 = beta2
-        self.iter = 0
-        self.m = None
-        self.v = None
-        
-    def update(self, params, grads):
-        if self.m is None:
-            self.m, self.v = {}, {}
-            # for key in range(4):
-            #     print(key)
-            self.m = np.zeros([1,4])
-            self.v = np.zeros([1,4])
-        
-        self.iter += 1
-        lr_t  = self.lr * np.sqrt(1.0 - self.beta2**self.iter) / (1.0 - self.beta1**self.iter)         
-        
-        for key in range(2):
-            #self.m[key] = self.beta1*self.m[key] + (1-self.beta1)*grads[key]
-            #self.v[key] = self.beta2*self.v[key] + (1-self.beta2)*(grads[key]**2)
-            self.m[0][key] += (1 - self.beta1) * (grads[0][key]    - self.m[0][key])
-            self.v[0][key] += (1 - self.beta2) * (grads[0][key]**2 - self.v[0][key])
-         
-            params[0][key] = lr_t * self.m[0][key] / (np.sqrt(self.v[0][key]) + 1e-7)
-        
-
-
 ver = "ver1"
 MODEL_PATH = f"Image_Generate/{ver}/"
 os.makedirs(MODEL_PATH,exist_ok=True)
@@ -84,45 +54,45 @@ model.summary()
 
 train = read_dataset(MODEL_PATH+"learning_data/train_1212.h5")
 test  = read_dataset(MODEL_PATH+"learning_data/val_1212.h5")
-# test1121=read_dataset2(MODEL_PATH+"learning_data/1210_test.h5")
+test1121=read_dataset2(MODEL_PATH+"learning_data/1210_test.h5")
 np.set_printoptions(threshold=np.inf)
 
 
 
-# default = tf.Variable([[0,0]])
-default = tf.Variable(test[1][700])
-print(default)
-y_true = test[0][750]/255
-x_true = test[1][750]
-print("pre\n",default,"\ntrue\n",x_true)
-# opt = keras.optimizers.SGD(lr=0.0001, momentum=0.99, decay=0.0, nesterov=False)
-opt =keras.optimizers.Adam(lr=0.5, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
-# optimizer = Adam(lr=0.5, beta1=0.9, beta2=0.99)
+opt = keras.optimizers.Adam(lr=0.8, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+pi_2 = tf.constant(1)
+pi_1 = tf.constant(1)
 
+for j in range(100):
+    default = tf.Variable([[0.0,0.0]])
+    y_true = test[0][j]/255
+    x_true = test[1][j]
+    # print("pre\n",default,"\ntrue\n",x_true)
     
-# for i in range(7):
-i=0
-grad=tf.Variable([[1000,1000]])
-while abs(grad[0][1])>25:
-    with tf.GradientTape() as tape:
-        tape.watch(default)
-        y_pred = model(default)
-        loss = tf.keras.losses.mean_squared_error(y_true,y_pred)
-        grad = tape.gradient(loss,default)
-        print("grad\n",grad)
-        opt.apply_gradients([(grad,default)])
-        print("grad\n",grad,"\npre\n",default)
-        if default[0][1]<0:
-            # default[0][1].assign(tf.add(default[0][1],tf.constant(1.0)))
-            default.assign([[default[0][0], tf.add(default[0][1],tf.constant(1.0))]])
-            print("-")
-            print("0grad\n",grad,"\npre\n",default[0][1])
-        if default[0][1]>1:
-            default.assign([[default[0][0], tf.subtract(default[0][1],tf.constant(0.5))]])
-            print("1grad\n",grad,"\npre\n",default[0][1])
-    i+=1
-print(i)
-                
+    # ite=0
+    for i in range(2):
+        with tf.GradientTape() as tape:
+            tape.watch(default)
+            y_pred = model(default)
+            loss = tf.keras.losses.mean_squared_error(y_true,y_pred)
+            # LOSS = np.sum(loss.numpy())/65025
+            # print("LOSS",LOSS)
+            grad = tape.gradient(loss,default)
+            # print("grad: ",grad)
+            opt.apply_gradients([(grad,default)])
             
-     
-print("\ntrue\n",x_true,"\npre\n",default)
+            # if default[0][0]<0:
+            #     default.assign([[tf.add(default[0][0]%tf.constant(1.0),tf.constant(1.0)),
+            #                      default[0][1]]])
+            # if default[0][1]<0:
+            #     default.assign([[default[0][0], tf.add(tf.mod(default[0][1],tf.constant(1.0)),tf.constant(1.0))]])
+                
+            # if default[0][0]>1:
+            #     default.assign([[tf.subtract(default[0][0],tf.constant(1.0)),default[0][1]]])
+            # if default[0][1]>1:
+            #     default.assign([[default[0][0], tf.subtract(default[0][1],tf.constant(1.0))]])
+           
+            # print(ite,"\ntrue\n",x_true,"\npre\n",default,"\ngrad\n",grad)
+            # ite+=1
+    
+    print("\ntrue\n",x_true,"\npre\n",default)
