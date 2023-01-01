@@ -59,29 +59,31 @@ np.set_printoptions(threshold=np.inf)
 
 
 
-opt = keras.optimizers.Adam(lr=0.2, beta_1=0.9, beta_2=0.99, epsilon=None, decay=0.0, amsgrad=False)
+opt = keras.optimizers.Adam(lr=0.1, beta_1=0.9, beta_2=0.99, epsilon=None, decay=0.0, amsgrad=False)
 # pi_2 = tf.constant(1)
 # pi_1 = tf.constant(1)
 
 # for j in range(1):
-default = tf.Variable([[0.0,0.0]])
-y_true = test[0][19]/255
-x_true = test[1][19]
+default = tf.Variable([[0.48799324 ,0.64176357]])
+y_true = test[0][719]/255
+x_true = test[1][719]
 # print("pre\n",default,"\ntrue\n",x_true)
 images = []
-for i in range(100):
+for i in range(10):
+# LOSS=1
+# while LOSS > 0.008:
     with tf.GradientTape() as tape:
         tape.watch(default)
         y_pred = model(default)
         loss = tf.keras.losses.mean_squared_error(y_true,y_pred)
+        LOSS = np.sum(loss.numpy())/65536
+        print("LOSS",LOSS)
         grad = tape.gradient(loss,default)
-        opt.apply_gradients([[grad,default]])
+        print("grad",grad)
+        opt.apply_gradients([(grad,default)])
         
-        im = Image.fromarray((y_pred.numpy()*255).reshape(image_size,image_size,3).astype(np.uint8)).convert('RGB')
-        images.append(im)
-           
-
-
+        # im = Image.fromarray((y_pred.numpy()*255).reshape(image_size,image_size,3).astype(np.uint8)).convert('RGB')
+        # images.append(im)
         
         if default[0][0]<0:
             default.assign([[tf.add(default[0][0],tf.constant(1.0)),default[0][1]]])
@@ -90,11 +92,10 @@ for i in range(100):
         
         if default[0][0]>1:
             default.assign([[tf.math.mod(default[0][0],tf.constant(1.0)),default[0][1]]])
-
         if default[0][1]>1:
             default.assign([[default[0][0], tf.math.mod(default[0][1],tf.constant(1.0))]])
        
-        print(i,"\ntrue\n",x_true,"\npre\n",default,"\ngrad\n",grad)
+        # print(i,"\ntrue\n",x_true,"\npre\n",default,"\ngrad\n",grad)
 
-im.save('out.gif', save_all=True, append_images=images)
+# im.save('out.gif', save_all=True, append_images=images)
 print("true\n",x_true,"\npre\n",default,"\n")
