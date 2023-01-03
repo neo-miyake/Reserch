@@ -16,25 +16,25 @@ from keras.models import Model
 from PIL import Image
 
 
-# def make_traindata(files,save_files):
-#     inputs  = np.zeros((len(files), image_size, image_size,3), np.uint8)
-#     outputs = np.zeros((len(files),1,2),np.float32)
+def make_traindata(files,save_files):
+    inputs  = np.zeros((len(files), image_size, image_size,3), np.uint8)
+    outputs = np.zeros((len(files),1,2),np.float32)
 
-#     for i, file in tqdm(enumerate(files)):
-#         image = Image.open(file)
-#         image = image.resize((image_size, image_size))
-#         data_in = np.asarray(image, np.uint8)
-#         inputs[i] = data_in
+    for i, file in tqdm(enumerate(files)):
+        image = Image.open(file)
+        image = image.resize((image_size, image_size))
+        data_in = np.asarray(image, np.uint8)
+        inputs[i] = data_in
         
-#         theta = float(os.path.splitext(os.path.basename(file))[0].split(',')[1])/math.pi
-#         phi   = float(os.path.splitext(os.path.basename(file))[0].split(',')[2])/(2*math.pi)
+        theta = float(os.path.splitext(os.path.basename(file))[0].split(',')[1])/math.pi
+        phi   = float(os.path.splitext(os.path.basename(file))[0].split(',')[2])/(2*math.pi)
         
-#         q = np.asarray([theta,phi],np.float32)
-#         outputs[i] = q
+        q = np.asarray([theta,phi],np.float32)
+        outputs[i] = q
 
-#     with h5py.File(save_files,"a") as h5:
-#         h5.create_dataset('inputs', data = inputs)
-#         h5.create_dataset('outputs',data = outputs)
+    with h5py.File(save_files,"a") as h5:
+        h5.create_dataset('inputs', data = inputs)
+        h5.create_dataset('outputs',data = outputs)
 
 def read_dataset(h5_path):
     data = []
@@ -82,117 +82,117 @@ dim=16
 # # save_files = MODEL_PATH+"/learning_data/val_1212.h5"
 # # make_traindata(files,save_files)
 
-# # input quaternion
-# input_ = layers.Input(shape=(2,))
+# input quaternion
+input_ = layers.Input(shape=(2,))
 
-# # 低解像度の画像を生成
-# x = layers.Dense(128, activation = 'tanh')(input_)
-# x = layers.Dense(512, activation = 'tanh')(x)
-# x = layers.Dense(2048,activation = 'tanh')(x)
-# x_1 = layers.Reshape((16,16,8))(x)
+# 低解像度の画像を生成
+x = layers.Dense(128, activation = 'tanh')(input_)
+x = layers.Dense(512, activation = 'tanh')(x)
+x = layers.Dense(2048,activation = 'tanh')(x)
+x_1 = layers.Reshape((16,16,8))(x)
 
-# "================================================================="
-# x = layers.Conv2D(dim*16,kernel_size=(3, 3), padding='same')(x_1)
-# x = layers.BatchNormalization()(x)
-# x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*16,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*16,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*16,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
+"================================================================="
+x = layers.Conv2D(dim*16,kernel_size=(3, 3), padding='same')(x_1)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*16,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*16,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*16,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
 
-# x = layers.UpSampling2D(size=(2,2))(x)
-# x_2 = layers.UpSampling2D(size=(2,2))(x_1)
-# x = layers.Concatenate(axis=3)([x, x_2])
-# "================================================================="
-
-
-# "================================================================="
-# x = layers.Conv2D(dim*8,kernel_size=(3, 3), padding='same')(x)
-# x = layers.BatchNormalization()(x)
-# x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*8,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*8,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*8,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-
-# x = layers.UpSampling2D(size=(2,2))(x)
-# x_3 = layers.UpSampling2D(size=(4,4))(x_1)
-# x = layers.Concatenate(axis=3)([x, x_3])
-# "================================================================="
+x = layers.UpSampling2D(size=(2,2))(x)
+x_2 = layers.UpSampling2D(size=(2,2))(x_1)
+x = layers.Concatenate(axis=3)([x, x_2])
+"================================================================="
 
 
-# "================================================================="
-# x = layers.Conv2D(dim*4,kernel_size=(3, 3), padding='same')(x)
-# x = layers.BatchNormalization()(x)
-# x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*4,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*4,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*4,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
+"================================================================="
+x = layers.Conv2D(dim*8,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*8,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*8,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*8,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
 
-# x = layers.UpSampling2D(size=(2,2))(x)
-# x_4 = layers.UpSampling2D(size=(8,8))(x_1)
-# x = layers.Concatenate(axis=3)([x, x_4])
-# "================================================================="
-
-
-# "================================================================="
-# x = layers.Conv2D(dim*2,kernel_size=(3, 3), padding='same')(x)
-# x = layers.BatchNormalization()(x)
-# x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*2,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*2,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*2,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-
-# x = layers.UpSampling2D(size=(2,2))(x)
-# x_5 = layers.UpSampling2D(size=(16,16))(x_1)
-# x = layers.Concatenate(axis=3)([x, x_5])
-# "================================================================="
+x = layers.UpSampling2D(size=(2,2))(x)
+x_3 = layers.UpSampling2D(size=(4,4))(x_1)
+x = layers.Concatenate(axis=3)([x, x_3])
+"================================================================="
 
 
-# "================================================================="
-# x = layers.Conv2D(dim*1,kernel_size=(3, 3), padding='same')(x)
-# x = layers.BatchNormalization()(x)
-# x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*1,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*1,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
-# # x = layers.Conv2D(dim*1,kernel_size=(3, 3), padding='same')(x)
-# # x = layers.BatchNormalization()(x)
-# # x = layers.Activation('relu')(x)
+"================================================================="
+x = layers.Conv2D(dim*4,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*4,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*4,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*4,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
 
-# x = layers.Conv2D(3,kernel_size=(3, 3), padding='same')(x)
-# x = layers.BatchNormalization()(x)
-# output_ = layers.Activation('sigmoid')(x)
-# "================================================================="
+x = layers.UpSampling2D(size=(2,2))(x)
+x_4 = layers.UpSampling2D(size=(8,8))(x_1)
+x = layers.Concatenate(axis=3)([x, x_4])
+"================================================================="
 
-# model = Model(input_,output_)
-# model.compile(optimizer='adam',loss='mean_squared_error')
-# model.summary()
+
+"================================================================="
+x = layers.Conv2D(dim*2,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*2,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*2,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*2,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+
+x = layers.UpSampling2D(size=(2,2))(x)
+x_5 = layers.UpSampling2D(size=(16,16))(x_1)
+x = layers.Concatenate(axis=3)([x, x_5])
+"================================================================="
+
+
+"================================================================="
+x = layers.Conv2D(dim*1,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*1,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*1,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+x = layers.Conv2D(dim*1,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Activation('relu')(x)
+
+x = layers.Conv2D(3,kernel_size=(3, 3), padding='same')(x)
+x = layers.BatchNormalization()(x)
+output_ = layers.Activation('sigmoid')(x)
+"================================================================="
+
+model = Model(input_,output_)
+model.compile(optimizer='adam',loss='mean_squared_error')
+model.summary()
 
 # #NNの可視化
 # # from tensorflow.keras.utils import plot_model
@@ -200,19 +200,19 @@ dim=16
 # # plot_model(model, show_shapes=True, show_layer_names=True, to_file=os.path.join(MODEL_PATH,"model_cvnn_ver1-"+str(num+1)+".png"))
 # # tf.keras.utils.plot_model(model, to_file=os.path.join(MODEL_PATH,"model_cvnn_ver1-"+str(num+1)+".png"), show_shapes=True)
 
-# reducelr=keras.callbacks.ReduceLROnPlateau(monitor='loss',factor=0.5,patience=5,min_lr=0.000000001)
-# early_stopping=keras.callbacks.EarlyStopping(monitor='val_loss',patience=10,min_delta=0.0)
+reducelr=keras.callbacks.ReduceLROnPlateau(monitor='loss',factor=0.5,patience=5,min_lr=0.000000001)
+early_stopping=keras.callbacks.EarlyStopping(monitor='val_loss',patience=10,min_delta=0.0)
 
-# train = read_dataset(MODEL_PATH+"learning_data/train_1212.h5")
+train = read_dataset(MODEL_PATH+"learning_data/train_1212.h5")
 test  = read_dataset(MODEL_PATH+"learning_data/val_1212.h5")
 
-# history = model.fit(train[1], train[0]/255, batch_size = 64, epochs=500,
-#           callbacks=[reducelr,early_stopping],
-#           validation_data=(test[1], test[0]/255))
+history = model.fit(train[1], train[0]/255, batch_size = 64, epochs=500,
+          callbacks=[reducelr,early_stopping],
+          validation_data=(test[1], test[0]/255))
 
-# loss     = history.history['loss']
-# val_loss = history.history['val_loss']
-# plot_graph(loss, val_loss)
+loss     = history.history['loss']
+val_loss = history.history['val_loss']
+plot_graph(loss, val_loss)
 
 path, dirs, files = next(os.walk(MODEL_PATH+"result/"))
 dir_num = len(dirs)+1
