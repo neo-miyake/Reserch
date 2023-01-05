@@ -75,12 +75,12 @@ os.makedirs(MODEL_PATH,exist_ok=True)
 image_size = 256
 dim=16
 
-files = natsorted(glob.glob("learning_picture/cle_train_1/*.jpg"))
-save_files = MODEL_PATH+"/learning_data/train_0105.h5"
-make_traindata(files,save_files)
-files = natsorted(glob.glob("learning_picture/cle_val_1/*.jpg"))
-save_files = MODEL_PATH+"/learning_data/val_0105.h5"
-make_traindata(files,save_files)
+# files = natsorted(glob.glob("learning_picture/cle_train_1/*.jpg"))
+# save_files = MODEL_PATH+"/learning_data/train_0105.h5"
+# make_traindata(files,save_files)
+# files = natsorted(glob.glob("learning_picture/cle_val_1/*.jpg"))
+# save_files = MODEL_PATH+"/learning_data/val_0105.h5"
+# make_traindata(files,save_files)
 
 
 # input quaternion
