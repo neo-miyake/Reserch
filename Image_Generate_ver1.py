@@ -12,6 +12,7 @@ from tensorflow import keras
 from keras import layers
 from tensorflow import Tensor
 from tensorflow.python import traceback
+from keras.callbacks import EarlyStopping
 from keras.models import Model
 from PIL import Image
 
@@ -202,14 +203,14 @@ model.summary()
 # # tf.keras.utils.plot_model(model, to_file=os.path.join(MODEL_PATH,"model_cvnn_ver1-"+str(num+1)+".png"), show_shapes=True)
 
 reducelr=keras.callbacks.ReduceLROnPlateau(monitor='loss',factor=0.5,patience=5,min_lr=0.000000001)
-early_stopping=keras.callbacks.EarlyStopping(monitor='val_loss',patience=10,min_delta=0.0)
+early_stopping=EarlyStopping(monitor='val_loss',patience=10,min_delta=0.0)
 
 train = read_dataset(MODEL_PATH+"learning_data/train_0105.h5")
 test  = read_dataset(MODEL_PATH+"learning_data/val_0105.h5")
 
-history = model.fit(train[1], train[0]/255, batch_size = 64, epochs=500,
-          callbacks=[reducelr,early_stopping],
-          validation_data=(test[1], test[0]/255))
+history = model.fit(train[1], train[0]/255, batch_size = 64, epochs=200,
+          validation_data=(test[1], test[0]/255),
+          callbacks=[reducelr,early_stopping])
 
 loss     = history.history['loss']
 val_loss = history.history['val_loss']
