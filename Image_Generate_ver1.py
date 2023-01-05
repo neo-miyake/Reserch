@@ -207,6 +207,7 @@ early_stopping=EarlyStopping(monitor='val_loss',patience=10,min_delta=0.0)
 
 train = read_dataset(MODEL_PATH+"learning_data/train_0105.h5")
 test  = read_dataset(MODEL_PATH+"learning_data/val_0105.h5")
+print(len(test[0]),len(train[0]))
 
 history = model.fit(train[1], train[0]/255, batch_size = 64, epochs=200,
           validation_data=(test[1], test[0]/255),
