@@ -59,17 +59,17 @@ np.set_printoptions(threshold=np.inf)
 
 
 
-opt = keras.optimizers.Adam(lr=0.1, beta_1=0.9, beta_2=0.99, epsilon=None, decay=0.0, amsgrad=False)
+opt = keras.optimizers.Adam(lr=0.05, beta_1=0.9, beta_2=0.99, epsilon=None, decay=0.0, amsgrad=False)
 # pi_2 = tf.constant(1)
 # pi_1 = tf.constant(1)
 
 # for j in range(1):
-default = tf.Variable([[0.920498,  0.9843838]])
+default = tf.Variable([[0.820498,  0.8843838]])
 y_true = test[0][68]/255
 x_true = test[1][68]
 # print("pre\n",default,"\ntrue\n",x_true)
 images = []
-for i in range(10):
+for i in range(2):
 # LOSS=1
 # while LOSS > 0.008:
     with tf.GradientTape() as tape:
@@ -85,17 +85,20 @@ for i in range(10):
         # im = Image.fromarray((y_pred.numpy()*255).reshape(image_size,image_size,3).astype(np.uint8)).convert('RGB')
         # images.append(im)
         
-        # if default[0][0]<0:
-        #     default.assign([[tf.add(default[0][0],tf.constant(1.0)),default[0][1]]])
-        # if default[0][1]<0:
-        #     default.assign([[default[0][0], tf.add(default[0][1],tf.constant(1.0))]])
+        if default[0][0]<0:
+            default.assign([[tf.add(default[0][0],tf.constant(1.0)),default[0][1]]])
+        if default[0][1]<0:
+            default.assign([[default[0][0], tf.add(default[0][1],tf.constant(1.0))]])
         
-        # if default[0][0]>1:
-        #     default.assign([[tf.math.mod(default[0][0],tf.constant(1.0)),default[0][1]]])
-        # if default[0][1]>1:
-        #     default.assign([[default[0][0], tf.math.mod(default[0][1],tf.constant(1.0))]])
+        if default[0][0]>1:
+            default.assign([[tf.math.mod(default[0][0],tf.constant(1.0)),default[0][1]]])
+        if default[0][1]>1:
+            default.assign([[default[0][0], tf.math.mod(default[0][1],tf.constant(1.0))]])
        
         # print(i,"\ntrue\n",x_true,"\npre\n",default,"\ngrad\n",grad)
-
+y_pred = model(default)
+loss = tf.keras.losses.mean_squared_error(y_true,y_pred)
+LOSS = np.sum(loss.numpy())/65536
+print("LOSS",LOSS)
 # im.save('out.gif', save_all=True, append_images=images)
 print("true\n",x_true,"\npre\n",default,"\n")
