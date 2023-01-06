@@ -65,9 +65,9 @@ opt = keras.optimizers.Adam(lr=0.01, beta_1=0.9, beta_2=0.99, epsilon=None, deca
 
 # for j in range(1):
 # default = tf.Variable([[0.9982813 , 0.46913874]])
-default= tf.Variable(train[1][138])
-y_true = train[0][138]/255
-x_true = train[1][138]
+default= tf.Variable(train[1][38])
+y_true = train[0][38]/255
+x_true = train[1][38]
 print("pre\n",default,"\ntrue\n",x_true)
 images = []
 for i in range(1):

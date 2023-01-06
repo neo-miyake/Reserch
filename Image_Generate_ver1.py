@@ -27,7 +27,7 @@ def make_traindata(files,save_files):
         data_in = np.asarray(image, np.uint8)
         inputs[i] = data_in
         
-        theta = float(os.path.splitext(os.path.basename(file))[0].split(',')[1])/(2*math.pi)
+        theta = float(os.path.splitext(os.path.basename(file))[0].split(',')[1])/(math.pi)
         phi   = float(os.path.splitext(os.path.basename(file))[0].split(',')[2])/(2*math.pi)
         
         q = np.asarray([theta,phi],np.float32)
@@ -205,10 +205,10 @@ model.summary()
 reducelr=keras.callbacks.ReduceLROnPlateau(monitor='loss',factor=0.5,patience=5,min_lr=0.000000001)
 early_stopping=EarlyStopping(monitor='val_loss',patience=10,min_delta=0.0)
 
-train = read_dataset(MODEL_PATH+"learning_data/train_0105.h5")
-test  = read_dataset(MODEL_PATH+"learning_data/val_0105.h5")
+train = read_dataset(MODEL_PATH+"learning_data/train_1212.h5")
+test  = read_dataset(MODEL_PATH+"learning_data/val_1212.h5")
 
-history = model.fit(train[1], train[0]/255, batch_size = 64, epochs=200,
+history = model.fit(train[1], train[0]/255, batch_size = 32, epochs=300,
           validation_data=(test[1], test[0]/255),
           callbacks=[reducelr,early_stopping])
 
@@ -216,32 +216,32 @@ loss     = history.history['loss']
 val_loss = history.history['val_loss']
 plot_graph(loss, val_loss)
 
-path, dirs, files = next(os.walk(MODEL_PATH+"result/"))
-dir_num = len(dirs)+1
-os.makedirs(MODEL_PATH+"result/"+str(dir_num), exist_ok=True)
-files = natsorted(glob.glob("learning_picture/cle_valid_1/*.jpg"))
-print(files)
+# path, dirs, files = next(os.walk(MODEL_PATH+"result/"))
+# dir_num = len(dirs)+1
+# os.makedirs(MODEL_PATH+"result/"+str(dir_num), exist_ok=True)
+# files = natsorted(glob.glob("learning_picture/cle_valid_1/*.jpg"))
+# # print(files)
 
-# model = keras.models.load_model(MODEL_PATH+"model/Image_Generate_ver1_1.h5")
-# model.summary()
-pre = model.predict(test[1])
-for i, file in tqdm(enumerate(files)):
-    im1 = Image.open(file).convert('RGB')
-    im1 = im1.resize((image_size, image_size))
-    im1 = np.asarray(im1, np.uint8)
-    im2 = Image.fromarray((pre[i]*255).reshape(image_size,image_size,3).astype(np.uint8)).convert('RGB')
+# # model = keras.models.load_model(MODEL_PATH+"model/Image_Generate_ver1_1.h5")
+# # model.summary()
+# pre = model.predict(test[1])
+# for i, file in tqdm(enumerate(files)):
+#     im1 = Image.open(file).convert('RGB')
+#     im1 = im1.resize((image_size, image_size))
+#     im1 = np.asarray(im1, np.uint8)
+#     im2 = Image.fromarray((pre[i]*255).reshape(image_size,image_size,3).astype(np.uint8)).convert('RGB')
 
-    plt.figure()
-    plt.subplots_adjust(wspace=0.4)
-    plt.subplot(1,2,1)
-    plt.title("true",fontsize=18)
-    plt.imshow(im1)
-    plt.subplot(1,2,2)
-    plt.title("pred",fontsize=18)
-    plt.imshow(im2)
+#     plt.figure()
+#     plt.subplots_adjust(wspace=0.4)
+#     plt.subplot(1,2,1)
+#     plt.title("true",fontsize=18)
+#     plt.imshow(im1)
+#     plt.subplot(1,2,2)
+#     plt.title("pred",fontsize=18)
+#     plt.imshow(im2)
     
-    plt.savefig('{0}/{1}.jpg'.format(MODEL_PATH+"result/"+str(dir_num),i))
-    plt.close()
+#     plt.savefig('{0}/{1}.jpg'.format(MODEL_PATH+"result/"+str(dir_num),i))
+#     plt.close()
     
-num = len(glob.glob(MODEL_PATH+"/AutoEncoder/Image_Generate_ver1_"+"*"+".h5"))
+num = len(glob.glob(MODEL_PATH+"/model/Image_Generate_ver1_"+"*"+".h5"))
 model.save(MODEL_PATH+"/model/Image_Generate_ver1_"+str(num+1)+".h5")
