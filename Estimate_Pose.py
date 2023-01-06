@@ -49,7 +49,7 @@ image_size = 256
 # save_files = MODEL_PATH+"/learning_data/1210_test.h5"
 # maketraindata(save_files)
 
-model = keras.models.load_model(MODEL_PATH+"model/Image_Generate_ver1_1.h5")
+model = keras.models.load_model(MODEL_PATH+"model/Image_Generate_ver1_3.h5")
 model.summary()
 
 train = read_dataset(MODEL_PATH+"learning_data/train_1212.h5")
@@ -64,10 +64,10 @@ opt = keras.optimizers.Adam(lr=0.01, beta_1=0.9, beta_2=0.99, epsilon=None, deca
 # pi_1 = tf.constant(1)
 
 # for j in range(1):
-# default = tf.Variable([[0.9982813 , 0.46913874]])
-default= tf.Variable(train[1][38])
-y_true = train[0][38]/255
-x_true = train[1][38]
+# default = tf.Variable([[0.0,0.0]])
+default= tf.Variable(train[1][468])
+y_true = train[0][468]/255
+x_true = train[1][468]
 print("pre\n",default,"\ntrue\n",x_true)
 images = []
 for i in range(1):
